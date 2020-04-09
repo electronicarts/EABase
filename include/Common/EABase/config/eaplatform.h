@@ -410,6 +410,10 @@
 		#define EA_PROCESSOR_X86_64 1
 		#define EA_SYSTEM_LITTLE_ENDIAN 1
 		#define EA_PLATFORM_DESCRIPTION "Linux on x64"
+	#elif defined(__riscv)
+		#define EA_PROCESSOR_RISCV 1
+		#define EA_SYSTEM_LITTLE_ENDIAN 1
+		#define EA_PLATFORM_DESCRIPTION "Linux on RISC-V"
 	#elif defined(__powerpc64__)
 		#define EA_PROCESSOR_POWERPC 1
 		#define EA_PROCESSOR_POWERPC_64 1
