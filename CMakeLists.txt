@@ -30,3 +30,8 @@ add_library(EABase INTERFACE)
 # Include dirs
 #-------------------------------------------------------------------------------------------
 target_include_directories(EABase INTERFACE include/Common)
+
+#-------------------------------------------------------------------------------------------
+# Installation
+#-------------------------------------------------------------------------------------------
+install(DIRECTORY include/Common/EABase DESTINATION include)
