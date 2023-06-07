@@ -1,0 +1,65 @@
+name: ci
+on:
+  pull_request:
+  release:
+    types: [published]
+  push:
+    branches:
+      - master
+
+jobs:
+  Test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os:
+          - ubuntu-20.04
+          - macos-11
+        compiler:
+          - llvm-13.0.0
+          - gcc-11
+        generator:
+          - "Ninja Multi-Config"
+        build_type:
+          - Release
+          - Debug
+
+        exclude:
+          - os: macos-11
+            compiler: gcc-11
+          - os: ubuntu-20.04
+            compiler: llvm-13.0.0
+
+        include:
+          - compiler: gcc-11
+          - compiler: llvm-13.0.0
+          - build_type: Release
+          - build_tests: ON
+          - install_prefix: install
+
+          - os: windows-2022
+            compiler: msvc
+            generator: "Visual Studio 17 2022"
+            build_type: Release
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DEABASE_BUILD_TESTS:STRING=${{matrix.build_tests}} -DCMAKE_INSTALL_PREFIX:STRING=${{matrix.install_prefix}} -DCMAKE_CXX_COMPILER:STRING=${{matrix.compiler}} -DCMAKE_C_COMPILER:STRING=${{matrix.compiler}}
+
+      - name: Build
+        run: |
+          cmake --build ./build --config ${{matrix.build_type}}
+
+      - name: Install
+        run: |
+          cmake --build ./build --config ${{matrix.build_type}} --target install
+
+      - name: Test
+        working-directory: ./build
+        run: |
+          ctest -C ${{matrix.build_type}}
