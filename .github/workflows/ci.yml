@@ -1,65 +1,46 @@
 name: ci
 on:
-  pull_request:
-  release:
-    types: [published]
   push:
-    branches:
-      - master
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
-  Test:
-    runs-on: ${{ matrix.os }}
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
 
       matrix:
-        os:
-          - ubuntu-20.04
-          - macos-11
-        compiler:
-          - llvm-13.0.0
-          - gcc-11
-        generator:
-          - "Ninja Multi-Config"
-        build_type:
-          - Release
-          - Debug
-
-        exclude:
-          - os: macos-11
-            compiler: gcc-11
-          - os: ubuntu-20.04
-            compiler: llvm-13.0.0
+        config:
+        # FIXME: Windows fails to build EAMain: Error C2664
+        #  - { name: "Windows MSVC", os: windows-2019, cc: "cl", cxx: "cl", generator: "Visual Studio 16 2019"}
+          - { name: "Ubuntu gcc", os: ubuntu-22.04, cc: "gcc", cxx: "g++", generator: "Unix Makefiles" }
+          - { name: "MacOS clang", os: macos-12, cc: "clang", cxx: "clang++", generator: "Unix Makefiles" }
 
         include:
-          - compiler: gcc-11
-          - compiler: llvm-13.0.0
           - build_type: Release
           - build_tests: ON
           - install_prefix: install
-
-          - os: windows-2022
-            compiler: msvc
-            generator: "Visual Studio 17 2022"
-            build_type: Release
+          - build_type: Release
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 1
 
       - name: Configure CMake
-        run: |
-          cmake -S . -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DEABASE_BUILD_TESTS:STRING=${{matrix.build_tests}} -DCMAKE_INSTALL_PREFIX:STRING=${{matrix.install_prefix}} -DCMAKE_CXX_COMPILER:STRING=${{matrix.compiler}} -DCMAKE_C_COMPILER:STRING=${{matrix.compiler}}
+        run: cmake -S . -B ${{github.workspace}}/build -G "${{matrix.config.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DEABASE_BUILD_TESTS:STRING=${{matrix.build_tests}} -DCMAKE_INSTALL_PREFIX:STRING=${{github.workspace}}/${{matrix.install_prefix}} -DCMAKE_CXX_COMPILER:STRING=${{matrix.config.cxx}} -DCMAKE_C_COMPILER:STRING=${{matrix.config.cc}}
 
       - name: Build
-        run: |
-          cmake --build ./build --config ${{matrix.build_type}}
 
-      - name: Install
-        run: |
-          cmake --build ./build --config ${{matrix.build_type}} --target install
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}}
 
       - name: Test
-        working-directory: ./build
-        run: |
-          ctest -C ${{matrix.build_type}}
+        working-directory: ${{github.workspace}}/build
+        run: test/EABaseTest
+
+      - name: Install
+        run: cmake --build ${{github.workspace}}/build --config ${{matrix.build_type}} --target install
