@@ -420,6 +420,10 @@
 		#define EA_PROCESSOR_POWERPC_32 1
 		#define EA_SYSTEM_BIG_ENDIAN 1
 		#define EA_PLATFORM_DESCRIPTION "Linux on PowerPC"
+	#elif defined(__e2k__)
+		#define EA_PROCESSOR_E2K 1
+		#define EA_SYSTEM_LITTLE_ENDIAN 1
+		#define EA_PLATFORM_DESCRIPTION "Linux on x64"
 	#else
 		#error Unknown processor
 		#error Unknown endianness
