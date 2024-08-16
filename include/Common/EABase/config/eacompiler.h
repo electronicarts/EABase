@@ -621,7 +621,7 @@
 		#if defined(_MSC_VER)
 			#define EA_DISABLE_ALL_VC_WARNINGS()  \
 				__pragma(warning(push, 0)) \
-				__pragma(warning(disable: 4244 4265 4267 4350 4472 4509 4548 4623 4710 4985 6320 4755 4625 4626 4702)) // Some warnings need to be explicitly called out.
+				__pragma(warning(disable: 4244 4265 4267 4350 4472 4509 4548 4623 4710 4985 6320 4755 4625 4626 4702 4668)) // Some warnings need to be explicitly called out.
 		#else
 			#define EA_DISABLE_ALL_VC_WARNINGS()
 		#endif
