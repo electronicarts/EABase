@@ -212,7 +212,7 @@
 
 	// EA_COMPILER_HAS_BUILTIN
 	#ifndef EA_COMPILER_HAS_BUILTIN
-		#if defined(__clang__)
+		#if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ >= 10))
 			#define EA_COMPILER_HAS_BUILTIN(x) __has_builtin(x)
 		#else
 			#define EA_COMPILER_HAS_BUILTIN(x) 0
