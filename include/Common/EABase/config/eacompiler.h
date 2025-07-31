@@ -313,12 +313,11 @@
 	// decided to not define __cplusplus like thus until they have fully completed their
 	// C++20 support.
 	#if !defined(EA_COMPILER_CPP20_ENABLED) && defined(__cplusplus)
- 		// TODO(rparoin): enable once a C++20 value for the __cplusplus macro has been published
-		// #if (__cplusplus >= 202003L)
-		//     #define EA_COMPILER_CPP20_ENABLED 1
-		// #elif defined(_MSVC_LANG) && (_MSVC_LANG >= 202003L) // C++20+
-		//     #define EA_COMPILER_CPP20_ENABLED 1
-		// #endif
+		#if defined(__cplusplus) && (__cplusplus >= 202002L)
+			#define EA_COMPILER_CPP20_ENABLED 1
+		#elif defined(_MSVC_LANG) && (_MSVC_LANG >= 202002L)
+			#define EA_COMPILER_CPP20_ENABLED 1
+		#endif
 	#endif
 
 

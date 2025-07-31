@@ -2023,6 +2023,23 @@
 		#endif
 	#endif
 
+	/////////////////////////////////////////////////////////////////////////////////
+	//
+	// EA_CPP20_CONSTEXPR
+	//
+	// Defined as constexpr when the targeted language version is higher than or equal to
+	// C++20. Defined as nothing otherwise.
+	//
+	#if !defined(EA_CPP20_CONSTEXPR)
+		#if defined(EA_COMPILER_CPP20_ENABLED)
+			#define EA_CPP20_CONSTEXPR constexpr
+		#else
+			#define EA_CPP20_CONSTEXPR
+			#define EA_NO_CPP20_CONSTEXPR 1
+		#endif
+	#endif
+
+
 	// ------------------------------------------------------------------------
 	// EA_CONSTEXPR_IF
 	// 
