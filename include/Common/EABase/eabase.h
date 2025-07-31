@@ -1004,6 +1004,19 @@
 	#include <EABase/int128.h>
 #endif
 
+
+#if !defined(EA_GET_INSTRUCTION_POINTER)
+	#if defined(EA_COMPILER_CLANG) || defined(EA_COMPILER_GNUC)
+		#define EA_GET_INSTRUCTION_POINTER() []()EA_NO_INLINE{ return __builtin_return_address(0); }()
+	#elif defined(EA_COMPILER_MSVC) && !defined(_MANAGED)
+		#include <intrin.h>
+		#define EA_GET_INSTRUCTION_POINTER() []()EA_NO_INLINE{ return _ReturnAddress(); }()
+	#else
+		#define EA_GET_INSTRUCTION_POINTER() nullptr
+	#endif
+#endif
+
+
 #endif // Header include guard
 
 
