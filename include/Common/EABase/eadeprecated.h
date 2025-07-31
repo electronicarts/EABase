@@ -179,13 +179,23 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //
+// Internal macro which disables the compiler warnings
+//  EA_INTERNAL_DISABLE_DEPRECATED()
+//
+#define EA_INTERNAL_DISABLE_DEPRECATED()	\
+	EA_DISABLE_VC_WARNING(4996);			\
+	EA_DISABLE_CLANG_WARNING(-Wdeprecated-declarations);
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//
 // Suppress deprecated warnings around a block of code, see file comment for full usage.
 //  EA_DISABLE_DEPRECATED(current_ver, major_ver, minor_ver, change_ver, tag, "Suppress the deprecated warning until the given Release")
 //
 #define EA_DISABLE_DEPRECATED(_moduleVersion, _major_version, _minor_version, _patch_version, _annotation, _msg) \
 	EA_INTERNAL_DEPRECATED_BEFORETYPE(_moduleVersion, _major_version, _minor_version, _patch_version, _annotation) \
-	EA_DISABLE_VC_WARNING(4996);										\
-	EA_DISABLE_CLANG_WARNING(-Wdeprecated-declarations);
+	EA_INTERNAL_DISABLE_DEPRECATED();
+
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -243,9 +253,70 @@
 #if EA_IS_ENABLED(EA_DEPRECATIONS_FOR_2025_APRIL)
 	#define EA_REMOVE_AT_2025_APRIL EA_DEPRECATED
 	#define EA_REMOVE_AT_2025_APRIL_MSG EA_DEPRECATED_MESSAGE
+	#define EA_DISABLE_DEPRECATED_UNTIL_2025_APRIL EA_INTERNAL_DISABLE_DEPRECATED
+	#define EA_RESTORE_DEPRECATED_UNTIL_2025_APRIL EA_RESTORE_DEPRECATED
 #else
 	#define EA_REMOVE_AT_2025_APRIL
 	#define EA_REMOVE_AT_2025_APRIL_MSG(msg)
+	#define EA_DISABLE_DEPRECATED_UNTIL_2025_APRIL()
+	#define EA_RESTORE_DEPRECATED_UNTIL_2025_APRIL()
+#endif
+
+// EA_DEPRECATIONS_FOR_2025_OCT
+// This macro is provided as a means to disable warnings temporarily (in particular if a user is compiling with warnings as errors).
+// All deprecations raised by this macro (when it is EA_ENABLED) are scheduled for removal approximately October 2025.
+#ifndef EA_DEPRECATIONS_FOR_2025_OCT
+	#define EA_DEPRECATIONS_FOR_2025_OCT EA_ENABLED
+#endif
+
+#if EA_IS_ENABLED(EA_DEPRECATIONS_FOR_2025_OCT)
+	#define EA_REMOVE_AT_2025_OCT EA_DEPRECATED
+	#define EA_REMOVE_AT_2025_OCT_MSG EA_DEPRECATED_MESSAGE
+	#define EA_DISABLE_DEPRECATED_UNTIL_2025_OCT EA_INTERNAL_DISABLE_DEPRECATED
+	#define EA_RESTORE_DEPRECATED_UNTIL_2025_OCT EA_RESTORE_DEPRECATED
+#else
+	#define EA_REMOVE_AT_2025_OCT
+	#define EA_REMOVE_AT_2025_OCT_MSG(msg)
+	#define EA_DISABLE_DEPRECATED_UNTIL_2025_OCT()
+	#define EA_RESTORE_DEPRECATED_UNTIL_2025_OCT()
+#endif
+
+// EA_DEPRECATIONS_FOR_2026_APRIL
+// This macro is provided as a means to disable warnings temporarily (in particular if a user is compiling with warnings as errors).
+// All deprecations raised by this macro (when it is EA_ENABLED) are scheduled for removal approximately April 2026.
+#ifndef EA_DEPRECATIONS_FOR_2026_APRIL
+	#define EA_DEPRECATIONS_FOR_2026_APRIL EA_ENABLED
+#endif
+
+#if EA_IS_ENABLED(EA_DEPRECATIONS_FOR_2026_APRIL)
+	#define EA_REMOVE_AT_2026_APRIL EA_DEPRECATED
+	#define EA_REMOVE_AT_2026_APRIL_MSG EA_DEPRECATED_MESSAGE
+	#define EA_DISABLE_DEPRECATED_UNTIL_2026_APRIL EA_INTERNAL_DISABLE_DEPRECATED
+	#define EA_RESTORE_DEPRECATED_UNTIL_2026_APRIL EA_RESTORE_DEPRECATED
+#else
+	#define EA_REMOVE_AT_2026_APRIL
+	#define EA_REMOVE_AT_2026_APRIL_MSG(msg)
+	#define EA_DISABLE_DEPRECATED_UNTIL_2026_APRIL()
+	#define EA_RESTORE_DEPRECATED_UNTIL_2026_APRIL()
+#endif
+
+// EA_DEPRECATIONS_FOR_2026_OCT
+// This macro is provided as a means to disable warnings temporarily (in particular if a user is compiling with warnings as errors).
+// All deprecations raised by this macro (when it is EA_ENABLED) are scheduled for removal approximately October 2026.
+#ifndef EA_DEPRECATIONS_FOR_2026_OCT
+	#define EA_DEPRECATIONS_FOR_2026_OCT EA_ENABLED
+#endif
+
+#if EA_IS_ENABLED(EA_DEPRECATIONS_FOR_2026_OCT)
+	#define EA_REMOVE_AT_2026_OCT EA_DEPRECATED
+	#define EA_REMOVE_AT_2026_OCT_MSG EA_DEPRECATED_MESSAGE
+	#define EA_DISABLE_DEPRECATED_UNTIL_2026_OCT EA_INTERNAL_DISABLE_DEPRECATED
+	#define EA_RESTORE_DEPRECATED_UNTIL_2026_OCT EA_RESTORE_DEPRECATED
+#else
+	#define EA_REMOVE_AT_2026_OCT
+	#define EA_REMOVE_AT_2026_OCT_MSG(msg)
+	#define EA_DISABLE_DEPRECATED_UNTIL_2026_OCT()
+	#define EA_RESTORE_DEPRECATED_UNTIL_2026_OCT()
 #endif
 
 
