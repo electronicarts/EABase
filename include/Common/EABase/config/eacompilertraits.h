@@ -54,6 +54,7 @@
  *    EA_ABSTRACT
  *    EA_CONSTEXPR / EA_CONSTEXPR_OR_CONST
  *    EA_CONSTEXPR_IF 
+ *    EA_INLINE_VAR
  *    EA_EXTERN_TEMPLATE
  *    EA_NOEXCEPT
  *    EA_NORETURN
@@ -2060,7 +2061,24 @@
 		#endif
 	#endif
 
-
+	// ------------------------------------------------------------------------
+	// EA_INLINE_VAR
+	//
+	// Portable wrapper for C++17's 'inline variable' support.
+	//
+	// https://en.cppreference.com/w/cpp/language/inline.html
+	//
+	// Example usage:
+	//
+	// EA_INLINE_VAR constexpr in_place_t in_place{};
+	//
+	#if !defined(EA_INLINE_VAR)
+		#if defined(EASTL_INLINE_VARIABLE_ENABLED)
+			#define EA_INLINE_VAR inline
+		#else
+			#define EA_INLINE_VAR
+		#endif
+	#endif
 
 	// ------------------------------------------------------------------------
 	// EA_EXTERN_TEMPLATE
