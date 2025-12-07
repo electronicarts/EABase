@@ -614,6 +614,13 @@
 		#define EA_PLATFORM_WINRT 1 
 	#endif
 
+#elif defined(__EMSCRIPTEN__)
+	#define EA_PROCESSOR_EMSCRIPTEN 1
+	#define EA_SYSTEM_LITTLE_ENDIAN 1
+	#define EA_PLATFORM_DESCRIPTION "Emscripten WASM"
+	#define EA_PLATFORM_POSIX 1
+	#define EASTL_DEBUG_BREAK_OVERRIDE 1
+
 // Sun (Solaris)
 // __SUNPRO_CC is defined by the Sun compiler.
 // __sun is defined by the GCC compiler.
