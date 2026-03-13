@@ -536,7 +536,19 @@
 	#else
 		#define EA_PLATFORM_WIN32 1
 	#endif
-	#if defined(_M_AMD64) || defined(_AMD64_) || defined(__x86_64__)
+	#if defined(_M_ARM64) || defined(_M_ARM64EC)
+		#define EA_PROCESSOR_ARM64 1
+		#if defined(_M_ARM64)
+			#define EA_TARGET_ARCHITECTURE_ARM64 1
+		#else
+			#define EA_TARGET_ARCHITECTURE_ARM64EC 1
+		#endif
+		#define EA_SYSTEM_LITTLE_ENDIAN 1
+		#define EA_PLATFORM_DESCRIPTION "Windows on ARM64"
+		#if defined(EA_TARGET_ARCHITECTURE_ARM64EC)	// Disable USE_SOFT_INTRINSICS to avoid the uint128_t redefinition caused by <widemath.h> conflicting with EABase.
+			#define _DISABLE_SOFTINTRIN_
+		#endif
+	#elif defined(_M_AMD64) || defined(_AMD64_) || defined(__x86_64__)
 		#define EA_PROCESSOR_X86_64 1
 		#define EA_SYSTEM_LITTLE_ENDIAN 1
 		#define EA_PLATFORM_DESCRIPTION "Windows on x64"
@@ -553,10 +565,6 @@
 		#define EA_PROCESSOR_ARM32 1
 		#define EA_SYSTEM_LITTLE_ENDIAN 1
 		#define EA_PLATFORM_DESCRIPTION "Windows on ARM"
-	#elif defined(_M_ARM64)
-		#define EA_PROCESSOR_ARM64 1
-		#define EA_SYSTEM_LITTLE_ENDIAN 1
-		#define EA_PLATFORM_DESCRIPTION "Windows on ARM64"
 	#else //Possibly other Windows CE variants
 		#error Unknown processor
 		#error Unknown endianness
