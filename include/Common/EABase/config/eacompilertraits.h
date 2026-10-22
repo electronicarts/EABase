@@ -44,8 +44,9 @@
  *    EA_PASCAL
  *    EA_PASCAL_FUNC()
  *    EA_SSE = [0 | 1]
- *    EA_IMPORT
- *    EA_EXPORT
+ *    EA_API = [__declspec(dllexport|dllimport)], only if EA_DLL is defined, and only for Windows.
+ *    EA_IMPORT only if BUILD_SHARED_LIBS is enabled, only for Windows and as interface definition.	
+ *    EA_EXPORT only if BUILD_SHARED_LIBS is enabled, only for Windows and as private definition.
  *    EA_PRAGMA_ONCE_SUPPORTED
  *    EA_ONCE
  *    EA_OVERRIDE
@@ -1825,30 +1826,24 @@
 
 
 	// ------------------------------------------------------------------------
-	// EA_IMPORT
+	// EA_API
 	// import declaration specification
 	// specifies that the declared symbol is imported from another dynamic library.
-	#ifndef EA_IMPORT
+	// EA_DLL is defined in the project settings for the dynamic library build.
+	// EA_EXPORT is defined in the project settings for the dynamic library build as a private definition.
+	// EA_IMPORT is defined in the project settings for the dynamic library build as an interface(available only outside the library) definition.
+	#ifdef EA_DLL
 		#if defined(EA_COMPILER_MSVC)
-			#define EA_IMPORT __declspec(dllimport)
-		#else
-			#define EA_IMPORT
+			#ifdef EA_EXPORT
+				#define EA_API __declspec(dllexport)
+			#elif defined(EA_IMPORT)
+				#define EA_API __declspec(dllimport)		
+			#else
+				#define EA_API		
+			#endif
 		#endif
-	#endif
-
-
-	// ------------------------------------------------------------------------
-	// EA_EXPORT
-	// export declaration specification
-	// specifies that the declared symbol is exported from the current dynamic library.
-	// this is not the same as the C++ export keyword. The C++ export keyword has been
-	// removed from the language as of C++11.
-	#ifndef EA_EXPORT
-		#if defined(EA_COMPILER_MSVC)
-			#define EA_EXPORT __declspec(dllexport)
-		#else
-			#define EA_EXPORT
-		#endif
+	#else
+		#define EA_API
 	#endif
 
 
